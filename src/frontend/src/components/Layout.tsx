@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BarChart3, Brain, Camera, FileText, Menu, Mic, X } from "lucide-react";
+import { BarChart3, Brain, Menu, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
@@ -8,11 +8,11 @@ interface LayoutProps {
 }
 
 const navLinks = [
-  { to: "/", label: "Home", icon: null },
-  { to: "/text-detection", label: "Text", icon: FileText },
-  { to: "/facial-detection", label: "Facial", icon: Camera },
-  { to: "/voice-detection", label: "Voice", icon: Mic },
-  { to: "/evaluation", label: "Evaluation", icon: BarChart3 },
+  { to: "/", label: "Home" },
+  { to: "/text-detection", label: "Text Analysis" },
+  { to: "/facial-detection", label: "Facial Analysis" },
+  { to: "/voice-detection", label: "Voice Analysis" },
+  { to: "/evaluation", label: "ML Evaluation" },
 ];
 
 export default function Layout({ children }: LayoutProps) {
@@ -22,63 +22,48 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* ── Header ─────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 border-b border-border/60 bg-surface/90 backdrop-blur-xl">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-surface border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link
-              to="/"
-              data-ocid="nav.home.link"
-              className="flex items-center gap-3 group"
-            >
-              <div className="relative w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-primary-glow/60 group-hover:scale-105 transition-transform">
-                <Brain className="w-[18px] h-[18px] text-primary-foreground" />
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                <Brain className="w-5 h-5 text-primary-foreground" />
               </div>
-              <div className="hidden sm:block leading-tight">
-                <span className="font-display font-bold text-[15px] text-foreground block">
+              <div className="hidden sm:block">
+                <span className="font-bold text-lg text-foreground leading-tight">
                   StressDetect
                 </span>
-                <span className="text-[10px] text-muted-foreground font-medium tracking-wide">
+                <span className="block text-xs text-muted-foreground leading-tight">
                   ML-Powered Analysis
                 </span>
               </div>
             </Link>
 
             {/* Desktop Nav */}
-            <nav
-              className="hidden md:flex items-center gap-0.5"
-              aria-label="Main navigation"
-            >
-              {navLinks.map((link) => {
-                const Icon = link.icon;
-                const isActive = currentPath === link.to;
-                return (
-                  <Link
-                    key={link.to}
-                    to={link.to}
-                    data-ocid={`nav.${link.label.toLowerCase()}.link`}
-                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all ${
-                      isActive
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                    }`}
-                  >
-                    {Icon && <Icon className="w-3.5 h-3.5 flex-shrink-0" />}
-                    {link.label}
-                  </Link>
-                );
-              })}
+            <nav className="hidden md:flex items-center gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    currentPath === link.to
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </nav>
 
             {/* Mobile menu button */}
             <button
               type="button"
-              data-ocid="nav.mobile_menu.toggle"
-              className="md:hidden p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+              className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle menu"
-              aria-expanded={mobileOpen}
             >
               {mobileOpen ? (
                 <X className="w-5 h-5" />
@@ -91,47 +76,38 @@ export default function Layout({ children }: LayoutProps) {
 
         {/* Mobile Nav */}
         {mobileOpen && (
-          <div
-            data-ocid="nav.mobile_menu.panel"
-            className="md:hidden border-t border-border/60 bg-surface/95 backdrop-blur-xl px-4 py-3 space-y-1"
-          >
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive = currentPath === link.to;
-              return (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                  }`}
-                >
-                  {Icon && <Icon className="w-4 h-4 flex-shrink-0" />}
-                  {link.label}
-                </Link>
-              );
-            })}
+          <div className="md:hidden border-t border-border bg-surface px-4 py-3 space-y-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                onClick={() => setMobileOpen(false)}
+                className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  currentPath === link.to
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         )}
       </header>
 
-      {/* ── Main Content ──────────────────────────────────── */}
+      {/* Main Content */}
       <main className="flex-1">{children}</main>
 
-      {/* ── Footer ────────────────────────────────────────── */}
-      <footer className="border-t border-border bg-surface">
+      {/* Footer */}
+      <footer className="bg-surface border-t border-border mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            {/* Brand */}
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-sm">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
                 <Brain className="w-4 h-4 text-primary-foreground" />
               </div>
-              <div className="leading-tight">
-                <p className="font-display font-bold text-sm text-foreground">
+              <div>
+                <p className="font-semibold text-sm text-foreground">
                   Stress Detection System
                 </p>
                 <p className="text-xs text-muted-foreground">
@@ -140,24 +116,19 @@ export default function Layout({ children }: LayoutProps) {
               </div>
             </div>
 
-            {/* Links */}
-            <nav
-              className="flex items-center gap-1 flex-wrap justify-center"
-              aria-label="Footer navigation"
-            >
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
               {navLinks.slice(1).map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   {link.label}
                 </Link>
               ))}
-            </nav>
+            </div>
 
-            {/* Credit */}
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <span>© {new Date().getFullYear()} Built with</span>
               <span className="text-rose-500">♥</span>
               <span>using</span>

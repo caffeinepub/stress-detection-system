@@ -16,9 +16,8 @@ export default {
         },
         extend: {
             fontFamily: {
-                display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
-                sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-                mono: ['"JetBrains Mono"', 'monospace'],
+                sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
             },
             colors: {
                 border: 'oklch(var(--border))',
@@ -76,19 +75,10 @@ export default {
             borderRadius: {
                 lg: 'var(--radius)',
                 md: 'calc(var(--radius) - 2px)',
-                sm: 'calc(var(--radius) - 4px)',
-                xl: 'calc(var(--radius) + 4px)',
-                '2xl': 'calc(var(--radius) + 8px)',
-                '3xl': 'calc(var(--radius) + 16px)',
+                sm: 'calc(var(--radius) - 4px)'
             },
             boxShadow: {
-                xs: '0 1px 2px 0 oklch(0 0 0 / 0.05)',
-                sm: '0 1px 3px 0 oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.08)',
-                DEFAULT: '0 4px 6px -1px oklch(0 0 0 / 0.08), 0 2px 4px -2px oklch(0 0 0 / 0.08)',
-                md: '0 6px 16px -2px oklch(0 0 0 / 0.1), 0 2px 6px -2px oklch(0 0 0 / 0.06)',
-                lg: '0 12px 32px -4px oklch(0 0 0 / 0.12), 0 4px 8px -4px oklch(0 0 0 / 0.08)',
-                xl: '0 20px 48px -8px oklch(0 0 0 / 0.14), 0 8px 16px -8px oklch(0 0 0 / 0.08)',
-                'primary-glow': '0 4px 24px -4px oklch(0.44 0.135 193 / 0.4)',
+                xs: '0 1px 2px 0 rgba(0,0,0,0.05)'
             },
             keyframes: {
                 'accordion-down': {
@@ -98,26 +88,11 @@ export default {
                 'accordion-up': {
                     from: { height: 'var(--radix-accordion-content-height)' },
                     to: { height: '0' }
-                },
-                'fade-in': {
-                    from: { opacity: '0', transform: 'translateY(6px)' },
-                    to: { opacity: '1', transform: 'translateY(0)' }
-                },
-                'scale-in': {
-                    from: { opacity: '0', transform: 'scale(0.96)' },
-                    to: { opacity: '1', transform: 'scale(1)' }
-                },
-                'pulse-ring': {
-                    '0%, 100%': { opacity: '1', transform: 'scale(1)' },
-                    '50%': { opacity: '0.5', transform: 'scale(1.05)' }
                 }
             },
             animation: {
                 'accordion-down': 'accordion-down 0.2s ease-out',
-                'accordion-up': 'accordion-up 0.2s ease-out',
-                'fade-in': 'fade-in 0.3s ease-out',
-                'scale-in': 'scale-in 0.2s ease-out',
-                'pulse-ring': 'pulse-ring 2s ease-in-out infinite',
+                'accordion-up': 'accordion-up 0.2s ease-out'
             }
         }
     },
