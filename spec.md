@@ -1,27 +1,29 @@
 # Stress Detection System
 
 ## Current State
-A multi-modal stress detection app with three detection pages (Text, Facial, Voice) and an Evaluation page. Each detection page shows a stress/no-stress result with a confidence score after analysis. No stress management guidance is shown after detection.
+The app has three detection pages (Text, Facial, Voice), each showing a stress result and then rendering `<StressManagementSuggestions>` which shows wellness tips (both for stressed and non-stressed cases). There is no AI report, graph dashboard, or PDF download.
 
 ## Requested Changes (Diff)
 
 ### Add
-- A reusable `StressManagementSuggestions` component that renders contextual stress relief tips when stress is detected (or positive wellness tips when not stressed).
-- Suggestions tailored by detection method: text-based suggestions differ slightly from facial/voice ones but all cover breathing, exercise, sleep, mindfulness, and social support categories.
-- The component appears below the result card on all three detection pages when a result is available.
+- `StressReport` component: structured report card showing Detection Method, Detected Emotion, Stress Level (Low/Medium/High), Confidence Score, Possible Causes (contextual list), Recommended Actions (contextual list). Shown after analysis completes on all three detection pages.
+- `StressPredictionGraph` component: interactive recharts BarChart or LineChart showing simulated stress history over time (Day 1–7 with Low/Medium/High labels). Displayed below the report.
+- PDF download button: "Download Stress Report" — generates a printable PDF using the browser print API (window.print with a hidden styled div) or jsPDF. PDF includes: date/time, detection method, detected emotion, stress level, confidence score, suggested actions, and a text-based graph summary.
+- Install `jspdf` for PDF generation.
 
 ### Modify
-- `TextDetectionPage.tsx` — import and render `StressManagementSuggestions` after the result card.
-- `FacialDetectionPage.tsx` — import and render `StressManagementSuggestions` after the stress result card.
-- `VoiceDetectionPage.tsx` — import and render `StressManagementSuggestions` after the stress result card.
+- `TextDetectionPage`, `FacialDetectionPage`, `VoiceDetectionPage`: Replace `<StressManagementSuggestions>` with `<StressReport>` + `<StressPredictionGraph>` below results.
+- Each detection page passes the correct `method` prop ("Text Analysis" / "Face Analysis" / "Voice Analysis"), `emotion`, `stressLevel`, and `confidence` to the report component.
 
 ### Remove
-- Nothing removed.
+- Remove `<StressManagementSuggestions>` usage from all three detection pages (the Wellness Maintenance Tips section).
+- The `StressManagementSuggestions.tsx` component file can remain but should no longer be imported in detection pages.
 
 ## Implementation Plan
-1. Create `src/frontend/src/components/StressManagementSuggestions.tsx` with:
-   - Props: `isStressed: boolean`, `method: 'text' | 'facial' | 'voice'`, `confidence: number`
-   - When stressed: show 5–6 actionable tips grouped by category (Breathing, Physical Activity, Mindfulness, Sleep, Social Support, Professional Help)
-   - When not stressed: show 3 positive reinforcement / wellness maintenance tips
-   - Visual: card with a distinct color (amber/orange for stressed, green for not stressed), icons per category
-2. Import and place the component at the bottom of results in all three detection pages.
+1. Install `jspdf` package in frontend.
+2. Create `src/frontend/src/utils/stressReport.ts` — helper functions: `getStressLevel(confidence, isStressed)` returning Low/Medium/High, `getPossibleCauses(method, emotion, isStressed)` returning string[], `getRecommendedActions(stressLevel, method)` returning string[].
+3. Create `src/frontend/src/components/StressReport.tsx` — styled report card with all fields, PDF download button using jsPDF.
+4. Create `src/frontend/src/components/StressPredictionGraph.tsx` — recharts BarChart with 7 simulated days of stress data, numeric Y axis mapped to Low/Medium/High labels, animated, interactive tooltip.
+5. Update `TextDetectionPage.tsx` — remove StressManagementSuggestions import/usage, add StressReport + StressPredictionGraph after result.
+6. Update `FacialDetectionPage.tsx` — same as above, pass detected emotion from result.
+7. Update `VoiceDetectionPage.tsx` — same as above.

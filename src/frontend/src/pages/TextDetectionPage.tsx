@@ -12,8 +12,14 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { useState } from "react";
-import StressManagementSuggestions from "../components/StressManagementSuggestions";
+import StressPredictionGraph from "../components/StressPredictionGraph";
+import StressReport from "../components/StressReport";
 import { useProcessTextAnalysis } from "../hooks/useQueries";
+import {
+  getPossibleCauses,
+  getRecommendedActions,
+  getStressLevel,
+} from "../utils/stressReport";
 import {
   type ClassificationResult,
   classifyText,
@@ -40,13 +46,11 @@ export default function TextDetectionPage() {
     setIsAnalyzing(true);
     setResult(null);
 
-    // Simulate processing delay for realism
     await new Promise((r) => setTimeout(r, 800));
 
     const classification = classifyText(inputText);
     setResult(classification);
 
-    // Send to backend
     try {
       await processTextMutation.mutateAsync({
         isStressed: classification.isStressed,
@@ -141,6 +145,7 @@ export default function TextDetectionPage() {
         </label>
         <Textarea
           id="text-analysis-input"
+          data-ocid="text.textarea"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           placeholder="Type or paste text here... (e.g., 'I feel overwhelmed with work and can't sleep')"
@@ -161,6 +166,7 @@ export default function TextDetectionPage() {
               <RotateCcw className="w-3.5 h-3.5 mr-1" /> Reset
             </Button>
             <Button
+              data-ocid="text.submit_button"
               size="sm"
               onClick={handleAnalyze}
               disabled={!inputText.trim() || isAnalyzing}
@@ -254,13 +260,6 @@ export default function TextDetectionPage() {
             )}
           </div>
 
-          {/* Stress Management Suggestions */}
-          <StressManagementSuggestions
-            isStressed={result.isStressed}
-            method="text"
-            confidence={result.confidence}
-          />
-
           {/* Preprocessing Details */}
           <div className="bg-card border border-border rounded-xl overflow-hidden">
             <button
@@ -346,6 +345,34 @@ export default function TextDetectionPage() {
               </div>
             )}
           </div>
+
+          {/* AI Stress Report */}
+          {!isAnalyzing && (
+            <>
+              <StressReport
+                detectionMethod="Text Analysis"
+                detectedEmotion={result.isStressed ? "Stressed" : "Calm"}
+                stressLevel={getStressLevel(
+                  result.confidence,
+                  result.isStressed,
+                )}
+                confidenceScore={result.confidence}
+                possibleCauses={getPossibleCauses(
+                  "text",
+                  getStressLevel(result.confidence, result.isStressed),
+                )}
+                recommendedActions={getRecommendedActions(
+                  getStressLevel(result.confidence, result.isStressed),
+                )}
+              />
+              <StressPredictionGraph
+                currentStressLevel={getStressLevel(
+                  result.confidence,
+                  result.isStressed,
+                )}
+              />
+            </>
+          )}
         </div>
       )}
     </div>

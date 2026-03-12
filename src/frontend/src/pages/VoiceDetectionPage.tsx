@@ -11,9 +11,15 @@ import {
   Upload,
 } from "lucide-react";
 import { useRef, useState } from "react";
-import StressManagementSuggestions from "../components/StressManagementSuggestions";
+import StressPredictionGraph from "../components/StressPredictionGraph";
+import StressReport from "../components/StressReport";
 import { useAudioRecorder } from "../hooks/useAudioRecorder";
 import { useProcessVoiceAnalysis } from "../hooks/useQueries";
+import {
+  getPossibleCauses,
+  getRecommendedActions,
+  getStressLevel,
+} from "../utils/stressReport";
 import {
   type VoiceAnalysisResult,
   analyzeVoiceStress,
@@ -433,13 +439,29 @@ export default function VoiceDetectionPage() {
         </div>
       </div>
 
-      {/* Stress Management Suggestions */}
+      {/* AI Stress Report + Graph */}
       {result && !isAnalyzing && (
-        <div className="mt-6">
-          <StressManagementSuggestions
-            isStressed={result.isStressed}
-            method="voice"
-            confidence={result.confidence}
+        <div className="mt-6 space-y-4">
+          <StressReport
+            detectionMethod="Voice Analysis"
+            detectedEmotion={
+              result.stressIndicators[0] ?? "Voice patterns analyzed"
+            }
+            stressLevel={getStressLevel(result.confidence, result.isStressed)}
+            confidenceScore={result.confidence}
+            possibleCauses={getPossibleCauses(
+              "voice",
+              getStressLevel(result.confidence, result.isStressed),
+            )}
+            recommendedActions={getRecommendedActions(
+              getStressLevel(result.confidence, result.isStressed),
+            )}
+          />
+          <StressPredictionGraph
+            currentStressLevel={getStressLevel(
+              result.confidence,
+              result.isStressed,
+            )}
           />
         </div>
       )}
