@@ -11,19 +11,13 @@ import {
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useCamera } from "../camera/useCamera";
-import StressPredictionGraph from "../components/StressPredictionGraph";
-import StressReport from "../components/StressReport";
+import StressManagementSuggestions from "../components/StressManagementSuggestions";
 import { useProcessFacialAnalysis } from "../hooks/useQueries";
 import {
   type Emotion,
   type FacialAnalysisResult,
   analyzeFacialExpression,
 } from "../utils/facialAnalysis";
-import {
-  getPossibleCauses,
-  getRecommendedActions,
-  getStressLevel,
-} from "../utils/stressReport";
 
 const EMOTION_COLORS: Record<Emotion, string> = {
   happy:
@@ -485,31 +479,12 @@ export default function FacialDetectionPage() {
         </div>
       </div>
 
-      {/* AI Stress Report + Graph */}
       {result && !isAnalyzing && (
-        <div className="mt-6 space-y-4">
-          <StressReport
-            detectionMethod="Face Analysis"
-            detectedEmotion={
-              result.emotion.charAt(0).toUpperCase() + result.emotion.slice(1)
-            }
-            stressLevel={getStressLevel(result.confidence, result.isStressed)}
-            confidenceScore={result.confidence}
-            possibleCauses={getPossibleCauses(
-              "facial",
-              getStressLevel(result.confidence, result.isStressed),
-            )}
-            recommendedActions={getRecommendedActions(
-              getStressLevel(result.confidence, result.isStressed),
-            )}
-          />
-          <StressPredictionGraph
-            currentStressLevel={getStressLevel(
-              result.confidence,
-              result.isStressed,
-            )}
-          />
-        </div>
+        <StressManagementSuggestions
+          isStressed={result.isStressed}
+          method="facial"
+          confidence={result.confidence}
+        />
       )}
     </div>
   );

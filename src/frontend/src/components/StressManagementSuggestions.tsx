@@ -112,9 +112,7 @@ export default function StressManagementSuggestions({
         <h3
           className={`text-lg font-bold mb-1 ${isStressed ? "text-amber-800 dark:text-amber-300" : "text-green-800 dark:text-green-300"}`}
         >
-          {isStressed
-            ? "Stress Management Suggestions"
-            : "Wellness Maintenance Tips"}
+          "Stress Management Suggestions"
         </h3>
         <p className="text-sm text-muted-foreground">
           {isStressed

@@ -12,14 +12,8 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { useState } from "react";
-import StressPredictionGraph from "../components/StressPredictionGraph";
-import StressReport from "../components/StressReport";
+import StressManagementSuggestions from "../components/StressManagementSuggestions";
 import { useProcessTextAnalysis } from "../hooks/useQueries";
-import {
-  getPossibleCauses,
-  getRecommendedActions,
-  getStressLevel,
-} from "../utils/stressReport";
 import {
   type ClassificationResult,
   classifyText,
@@ -348,30 +342,11 @@ export default function TextDetectionPage() {
 
           {/* AI Stress Report */}
           {!isAnalyzing && (
-            <>
-              <StressReport
-                detectionMethod="Text Analysis"
-                detectedEmotion={result.isStressed ? "Stressed" : "Calm"}
-                stressLevel={getStressLevel(
-                  result.confidence,
-                  result.isStressed,
-                )}
-                confidenceScore={result.confidence}
-                possibleCauses={getPossibleCauses(
-                  "text",
-                  getStressLevel(result.confidence, result.isStressed),
-                )}
-                recommendedActions={getRecommendedActions(
-                  getStressLevel(result.confidence, result.isStressed),
-                )}
-              />
-              <StressPredictionGraph
-                currentStressLevel={getStressLevel(
-                  result.confidence,
-                  result.isStressed,
-                )}
-              />
-            </>
+            <StressManagementSuggestions
+              isStressed={result.isStressed}
+              method="text"
+              confidence={result.confidence}
+            />
           )}
         </div>
       )}
