@@ -16,7 +16,8 @@ export default {
         },
         extend: {
             fontFamily: {
-                sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                display: ['Bricolage Grotesque', 'system-ui', '-apple-system', 'sans-serif'],
+                sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
                 mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
             },
             colors: {
@@ -78,7 +79,9 @@ export default {
                 sm: 'calc(var(--radius) - 4px)'
             },
             boxShadow: {
-                xs: '0 1px 2px 0 rgba(0,0,0,0.05)'
+                xs: '0 1px 2px 0 rgba(0,0,0,0.05)',
+                teal: '0 4px 24px oklch(0.46 0.13 195 / 0.18)',
+                'teal-lg': '0 8px 40px oklch(0.46 0.13 195 / 0.22)'
             },
             keyframes: {
                 'accordion-down': {
@@ -88,11 +91,22 @@ export default {
                 'accordion-up': {
                     from: { height: 'var(--radix-accordion-content-height)' },
                     to: { height: '0' }
+                },
+                'fade-up': {
+                    from: { opacity: '0', transform: 'translateY(20px)' },
+                    to: { opacity: '1', transform: 'translateY(0)' }
+                },
+                'blob': {
+                    '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+                    '33%': { transform: 'translate(20px, -15px) scale(1.05)' },
+                    '66%': { transform: 'translate(-10px, 10px) scale(0.97)' }
                 }
             },
             animation: {
                 'accordion-down': 'accordion-down 0.2s ease-out',
-                'accordion-up': 'accordion-up 0.2s ease-out'
+                'accordion-up': 'accordion-up 0.2s ease-out',
+                'fade-up': 'fade-up 0.6s ease-out forwards',
+                'blob': 'blob 7s ease-in-out infinite'
             }
         }
     },

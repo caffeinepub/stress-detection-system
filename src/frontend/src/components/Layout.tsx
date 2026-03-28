@@ -1,5 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BarChart3, Brain, Menu, X } from "lucide-react";
+import {
+  BarChart3,
+  Brain,
+  FileText,
+  Menu,
+  Mic,
+  ScanFace,
+  X,
+} from "lucide-react";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
@@ -8,11 +16,11 @@ interface LayoutProps {
 }
 
 const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/text-detection", label: "Text Analysis" },
-  { to: "/facial-detection", label: "Facial Analysis" },
-  { to: "/voice-detection", label: "Voice Analysis" },
-  { to: "/evaluation", label: "ML Evaluation" },
+  { to: "/", label: "Home", icon: Brain },
+  { to: "/text-detection", label: "Text", icon: FileText },
+  { to: "/facial-detection", label: "Facial", icon: ScanFace },
+  { to: "/voice-detection", label: "Voice", icon: Mic },
+  { to: "/evaluation", label: "Evaluation", icon: BarChart3 },
 ];
 
 export default function Layout({ children }: LayoutProps) {
@@ -23,39 +31,45 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-surface border-b border-border shadow-sm">
+      <header className="sticky top-0 z-50 glass">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+            <Link to="/" className="flex items-center gap-2.5 group">
+              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-teal group-hover:scale-105 transition-transform duration-200">
                 <Brain className="w-5 h-5 text-primary-foreground" />
               </div>
               <div className="hidden sm:block">
-                <span className="font-bold text-lg text-foreground leading-tight">
+                <span className="font-display font-bold text-base text-foreground leading-tight tracking-tight">
                   StressDetect
                 </span>
-                <span className="block text-xs text-muted-foreground leading-tight">
+                <span className="block text-[11px] text-muted-foreground leading-tight font-medium tracking-wide">
                   ML-Powered Analysis
                 </span>
               </div>
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPath === link.to
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <nav className="hidden md:flex items-center gap-0.5">
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = currentPath === link.to;
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    data-ocid={"nav.link"}
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-teal"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    {link.label}
+                  </Link>
+                );
+              })}
             </nav>
 
             {/* Mobile menu button */}
@@ -76,21 +90,25 @@ export default function Layout({ children }: LayoutProps) {
 
         {/* Mobile Nav */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-border bg-surface px-4 py-3 space-y-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                onClick={() => setMobileOpen(false)}
-                className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  currentPath === link.to
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <div className="md:hidden border-t border-border bg-surface/95 backdrop-blur-sm px-4 py-3 space-y-1">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                    currentPath === link.to
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         )}
       </header>
@@ -102,13 +120,13 @@ export default function Layout({ children }: LayoutProps) {
       <footer className="bg-surface border-t border-border mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
                 <Brain className="w-4 h-4 text-primary-foreground" />
               </div>
               <div>
-                <p className="font-semibold text-sm text-foreground">
-                  Stress Detection System
+                <p className="font-display font-semibold text-sm text-foreground">
+                  Stress Detection with Machine Learning
                 </p>
                 <p className="text-xs text-muted-foreground">
                   ML-Powered Logistic Regression Analysis
@@ -116,12 +134,12 @@ export default function Layout({ children }: LayoutProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-5 text-sm text-muted-foreground">
               {navLinks.slice(1).map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="hover:text-foreground transition-colors"
+                  className="hover:text-foreground transition-colors text-sm"
                 >
                   {link.label}
                 </Link>
@@ -133,7 +151,7 @@ export default function Layout({ children }: LayoutProps) {
               <span className="text-rose-500">♥</span>
               <span>using</span>
               <a
-                href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname || "stress-detection-system")}`}
+                href={`https://caffeine.ai/?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname || "stress-detection-system")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-semibold text-primary hover:underline"
